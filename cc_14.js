@@ -17,12 +17,19 @@ function createSupportTicket (name, issue, level) {
     if (level === "High") { // If level is "High" -> adds ticket to high priority class
         ticket.classList.add("high");
     }; // Part of Task 3
-
+    
     const resolveButton = document.createElement("button"); // Creates button to resolve/remove ticket
     resolveButton.textContent = "Resolve"; // Adds resolve text to button
 
-    resolveButton.addEventListener("click", () => // When resolve button is clicked -> removes ticket from container
-    ticketContainer.removeChild(ticket));
+    // Task 4: Support Ticket Resolution with Event Bubbling
+    ticketContainer.addEventListener("click", () => { // When support ticket is clicked -> console logs that a support ticket has been clicked
+        console.log("Support ticket has been clicked.")
+    }); // Part of Task 4
+
+    resolveButton.addEventListener("click", (event) => {// When resolve button is clicked -> removes ticket from container
+    ticketContainer.removeChild(ticket);
+    event.stopPropagation() // Prevents ticket container event from bubbling when resolve button is clicked
+    }); // Part of Task 4
 
     ticket.appendChild(customerName); // Appends customer name to ticket
     ticket.appendChild(priorityLevel); // Appends priority level to ticket
