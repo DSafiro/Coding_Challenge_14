@@ -14,11 +14,15 @@ function createSupportTicket (name, issue, level) {
     const priorityLevel = document.createElement("label"); // Creates new label for priority level
     priorityLevel.textContent = `Priority Level: ${level}`; // Adds priority level
 
+    if (level === "High") { // If level is "High" -> adds ticket to high priority class
+        ticket.classList.add("high");
+    }; // Part of Task 3
+
     const resolveButton = document.createElement("button"); // Creates button to resolve/remove ticket
     resolveButton.textContent = "Resolve"; // Adds resolve text to button
 
     resolveButton.addEventListener("click", () => // When resolve button is clicked -> removes ticket from container
-    ticket.remove());
+    ticketContainer.removeChild(ticket));
 
     ticket.appendChild(customerName); // Appends customer name to ticket
     ticket.appendChild(priorityLevel); // Appends priority level to ticket
@@ -32,3 +36,16 @@ function createSupportTicket (name, issue, level) {
 createSupportTicket("Dwayne Johnson", "PC is not working.", "High");
 createSupportTicket("Kevin Hart", "How do I open word on my phone?", "Low");
 createSupportTicket("Jack Black", "I installed a virus and cannot remove it.", "High");
+
+// Task 3: Converting NodeLists to Arrays for Bulk Updates
+function highlightHighPriorityTickets () {
+    const highPriorityList = document.querySelectorAll(".high"); // Selects all tickets with high priority class
+    const highPriorityArray = [...highPriorityList]; // Converts list of high priority tickets into an array
+
+    highPriorityArray.forEach(ticket => {
+        ticket.style.border = "2px solid red"; // Adds red border to all high priority tickets
+        ticket.style.backgroundColor = "indianred"; // Adds red background color to all high priority tickets
+    }); // Highlights high priority tickets
+}; // Function to highlight high priority tickets
+highlightHighPriorityTickets(); // Calls highlight priority tickets function
+
