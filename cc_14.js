@@ -14,7 +14,7 @@ function createSupportTicket (name, issue, level) {
     const priorityLevel = document.createElement("label"); // Creates new label for priority level
     priorityLevel.textContent = `Priority Level: ${level}`; // Adds priority level
 
-    if (level === "High") { // If level is "High" -> adds ticket to high priority class
+    if (level.toLowerCase() === "high") { // If level is "high" -> adds ticket to high priority class
         ticket.classList.add("high");
     }; // Part of Task 3
     
@@ -23,7 +23,7 @@ function createSupportTicket (name, issue, level) {
 
     // Task 4: Support Ticket Resolution with Event Bubbling
     ticketContainer.addEventListener("click", () => { // When support ticket is clicked -> console logs that a support ticket has been clicked
-        console.log("Support ticket has been clicked.")
+        console.log("Support ticket has been clicked.");
     }); // Part of Task 4
 
     resolveButton.addEventListener("click", (event) => {// When resolve button is clicked -> removes ticket from container
@@ -31,10 +31,63 @@ function createSupportTicket (name, issue, level) {
     event.stopPropagation() // Prevents ticket container event from bubbling when resolve button is clicked
     }); // Part of Task 4
 
+    // Task 5: Inline Editing for Support Tickets
+    const editButton = document.createElement("button"); // Creates button for editing ticket
+    editButton.textContent = "Edit"; // Adds edit text to button
+
+    editButton.addEventListener("click", (event) => { // When edit button is clicked -> able to edit text fields
+        editButton.style.display = "none"; // Hides edit button
+        resolveButton.style.display = "none"; // Hides resolve button
+
+        const customerNameInput = document.createElement("input"); // Creates input for customer name
+        customerNameInput.value = customerName.textContent; // Prepopulates input with existing customer name
+        ticket.replaceChild(customerNameInput, customerName); // Replaces customer name with input field
+
+        const issueDescriptionInput = document.createElement("input"); // Creates input for issue description
+        issueDescriptionInput.value = issueDescription.textContent.replace("Issue Description: ", ""); // Prepopulates input with existing issue description
+        ticket.replaceChild(issueDescriptionInput, issueDescription); // Replaces issue description with input field
+
+        const priorityLevelInput = document.createElement("input"); // Creates input for priority level
+        priorityLevelInput.value = priorityLevel.textContent.replace("Priority Level: ", ""); // Prepopulates input with existing priority level
+        ticket.replaceChild(priorityLevelInput, priorityLevel); // Replaces priority level with input field
+
+        const saveButton = document.createElement("button"); // Creates button for saving ticket
+        saveButton.textContent = "Save"; // Adds save text to button
+
+        saveButton.addEventListener("click", (event) => { // When save button is clicked -> saves inputted text
+            customerName.textContent = customerNameInput.value; // Updates customer name to new one
+            ticket.replaceChild(customerName, customerNameInput); // Updates customer name to a static text field
+
+            issueDescription.textContent = `Issue Description: ${issueDescriptionInput.value}`; // Updates issue description to new one
+            ticket.replaceChild(issueDescription, issueDescriptionInput); // Updates issue description to a static text field
+            
+            priorityLevel.textContent = `Priority Level: ${priorityLevelInput.value}`; // Updates priority level to new one
+            ticket.replaceChild(priorityLevel, priorityLevelInput); // Updates priority level to a static text field
+
+            ticket.classList.remove("high"); // Restores ticket to original style
+            ticket.style.border = "";
+            ticket.style.backgroundColor = "";
+
+            if (priorityLevelInput.value.toLowerCase() === "high") { // If ticket is high priority level -> highlights using "high" class
+                ticket.classList.add("high");
+                ticket.setAttribute("class", "high");
+            };
+
+            saveButton.remove(); // Removes save button when edit is complete
+            editButton.style.removeProperty("display"); // Displays edit button again
+            resolveButton.style.removeProperty("display"); // Displays resolvbe button again
+            event.stopPropagation(); // Preevents ticket container event form bubbling when save button is pressed
+        });
+
+        ticket.appendChild(saveButton); // Appends save button to ticket
+        event.stopPropagation(); // Prevents container event from bubbling
+    });
+    
     ticket.appendChild(customerName); // Appends customer name to ticket
-    ticket.appendChild(priorityLevel); // Appends priority level to ticket
+    ticket.appendChild(priorityLevel); // Appends priority level to tickets
     ticket.appendChild(issueDescription); // Appends issue description to ticket 
     ticket.appendChild(resolveButton); // Appends resolve button to ticket
+    ticket.appendChild(editButton); // Appends edit button to ticket
 
     ticketContainer.appendChild(ticket); // Appends ticket to ticket container
 }; // Function to create support ticket
